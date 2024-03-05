@@ -134,7 +134,7 @@ export function createBed(scene) {
 }
 
 // // Function to create a wardrobe with double doors
-export function createWardrobe(scene,wardrobeWidth,wardrobeHeight,wardrobeDepth) {
+export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDepth) {
 
     // Create the doors
     const doorGeometry = new THREE.BoxGeometry(wardrobeWidth / 2, wardrobeHeight, 0.05);
@@ -171,25 +171,25 @@ export function createWardrobe(scene,wardrobeWidth,wardrobeHeight,wardrobeDepth)
     bottomClone.position.y = bottomPosition;
 
     //Create the top and bottom bookcase 
-    const topBottomBookcaseGeometry = new THREE.BoxGeometry(wardrobeWidth - 0.1 , 0.05, wardrobeDepth - 0.05);
+    const topBottomBookcaseGeometry = new THREE.BoxGeometry(wardrobeWidth - 0.1, 0.05, wardrobeDepth - 0.05);
     const topBottomBookcase = new THREE.Mesh(topBottomBookcaseGeometry, wallMaterial);
     const topBookcase = wardrobeHeight / 2 - 0.3 - 0.05;
     const bottomBookcase = -wardrobeHeight / 2 + 0.2 + 0.05;
 
     // Position the top and bottom bookcase
-    topBottomBookcase.position.set(0, topBookcase , 0);
+    topBottomBookcase.position.set(0, topBookcase, 0);
     const bottomBookcaseClone = topBottomBookcase.clone();
     bottomBookcaseClone.position.y = bottomBookcase;
 
     //Create the top and bottom coat rack 
-    const coatRackGeometry = new THREE.CylinderGeometry(0.02, 0.02, wardrobeWidth - 0.1 );
+    const coatRackGeometry = new THREE.CylinderGeometry(0.02, 0.02, wardrobeWidth - 0.1);
     const coatRack = new THREE.Mesh(coatRackGeometry, wallMaterial);
     const coatRackPosition = topBookcase - 0.1;
 
     // Position the top and bottom coat rack 
     coatRack.rotation.z = -Math.PI / 2; // Rotate 90 degrees to face into the room
-    coatRack.position.set(0, coatRackPosition , 0);
-    
+    coatRack.position.set(0, coatRackPosition, 0);
+
     // Create a group for the wardrobe and doors
     const wardrobeGroup = new THREE.Group();
     wardrobeGroup.add(
@@ -206,15 +206,15 @@ export function createWardrobe(scene,wardrobeWidth,wardrobeHeight,wardrobeDepth)
     );
 
     // Optionally, position the wardrobe
-    wardrobeGroup.position.set(4 + 0.2 - wardrobeWidth/2, wardrobeHeight/2 + 0.1 , 0);
+    wardrobeGroup.position.set(4 + 0.2 - wardrobeWidth / 2, wardrobeHeight / 2 + 0.1, 0);
     wardrobeGroup.rotation.y = -Math.PI / 2; // Rotate 90 degrees to face into the room
 
     scene.add(wardrobeGroup);
     const wardrobe2Group = wardrobeGroup.clone();
     const wardrobe3Group = wardrobeGroup.clone();
-    wardrobe2Group.position.set(4 + 0.2 - wardrobeWidth/2, wardrobeHeight/2 + 0.1 ,wardrobeWidth ); 
+    wardrobe2Group.position.set(4 + 0.2 - wardrobeWidth / 2, wardrobeHeight / 2 + 0.1, wardrobeWidth);
     scene.add(wardrobe2Group);
-    wardrobe3Group.position.set(4 + 0.2 - wardrobeWidth/2, wardrobeHeight/2 + 0.1 , wardrobeWidth*2 ); 
+    wardrobe3Group.position.set(4 + 0.2 - wardrobeWidth / 2, wardrobeHeight / 2 + 0.1, wardrobeWidth * 2);
     scene.add(wardrobe3Group);
     // Return the wardrobe group if needed
     return wardrobeGroup;
