@@ -64,7 +64,6 @@ export function cowboyBoots(scene, width, height) {
   var loader = new GLTFLoader();
   loader.load('models/wardrobe/Cowboy boots.glb', function (gltf) {
     gltf.scene.scale.set(0.1, 0.1, 0.1);
-    // gltf.scene.rotation.y = -Math.PI / 2;
     gltf.scene.position.set(4 - width / 2 + 0.1, 0.38, 2 * width - 0.6 + 2 / 10);
     scene.add(gltf.scene);
   });
@@ -75,7 +74,6 @@ export function sneakers(scene, width, height) {
   var loader = new GLTFLoader();
   loader.load('models/wardrobe/Sneakers.glb', function (gltf) {
     gltf.scene.scale.set(0.001, 0.001, 0.001);
-    // gltf.scene.rotation.y = -Math.PI / 2;
     gltf.scene.position.set(4 - width / 2 + 0.1, 0.13, 1 * width - 0.6 + 7 / 10);
     scene.add(gltf.scene);
   });
@@ -87,7 +85,6 @@ export function flipFlops(scene, width, height) {
   var loader = new GLTFLoader();
   loader.load('models/wardrobe/Flip flops.glb', function (gltf) {
     gltf.scene.scale.set(0.0000004, 0.0000004, 0.0000004);
-    // gltf.scene.rotation.y = -Math.PI / 2;
     gltf.scene.position.set(4 - width / 2 + 0.6, 0.13, 0 * width - 0.6 + 5 / 10);
     scene.add(gltf.scene);
   });
@@ -98,8 +95,75 @@ export function pairOfShoes(scene, width, height) {
   var loader = new GLTFLoader();
   loader.load('models/wardrobe/Pair of shoes.glb', function (gltf) {
     gltf.scene.scale.set(0.1, 0.1, 0.1);
-    // gltf.scene.rotation.y = -Math.PI / 2;
     gltf.scene.position.set(4 - width / 2 + 0.2, height - 0.15, 0 * width - 0.6 + 5 / 10);
     scene.add(gltf.scene);
+  });
+}
+
+// Dual Monitors on sit-stand arm by Pookage Hayes [CC-BY] via Poly Pizza
+
+export function dualMonitors(scene, width, height, depth) {
+
+  var loader = new GLTFLoader();
+  loader.load('models/table/Dual Monitors on sit-stand arm.glb', function (gltf) {
+    gltf.scene.scale.set(0.3, 0.3, 0.3);
+    gltf.scene.rotation.y = -Math.PI;
+    gltf.scene.position.set(width + 0.2, height + 0.48, depth);
+    scene.add(gltf.scene);
+  });
+}
+
+// PC by Poly by Google [CC-BY] via Poly Pizza
+
+export function pc(scene, width, height, depth) {
+
+  var loader = new GLTFLoader();
+  loader.load('models/table/PC.glb', function (gltf) {
+    gltf.scene.scale.set(0.01, 0.01, 0.01);
+    gltf.scene.rotation.y = Math.PI / 2;
+    gltf.scene.position.set(width - 0.7, height + 0.05, depth);
+    scene.add(gltf.scene);
+  });
+}
+
+// Mug With Office Tool by CreativeTrio
+export function mug(scene, width, height, depth) {
+
+  var loader = new GLTFLoader();
+  loader.load('models/table/Mug With Office Tool.glb', function (gltf) {
+    gltf.scene.scale.set(1.5, 1.5, 1.5);
+    gltf.scene.position.set(width + 0.6, height + 0.05, depth - 0.2);
+    scene.add(gltf.scene);
+  });
+}
+
+// Pencil by Poly by Google [CC-BY] via Poly Pizza
+
+export function pencil(scene, width, height, depth) {
+
+  var loader = new GLTFLoader();
+  loader.load('models/table/Pencil.glb', function (gltf) {
+    gltf.scene.scale.set(0.025, 0.025, 0.025);
+    gltf.scene.rotation.y = Math.PI / 3;
+    gltf.scene.position.set(width + 0.6, height - 0.13, depth - 0.2);
+    scene.add(gltf.scene);
+  });
+}
+
+// Pillow by Poly by Google [CC-BY] via Poly Pizza
+
+export function pillow(scene, width, height, depth) {
+
+  var loader = new GLTFLoader();
+  loader.load('models/bed/Pillow.glb', function (gltf) {
+    gltf.scene.scale.set(0.15, 0.15, 0.15);
+    // gltf.scene.rotation.y = Math.PI / 3;
+    gltf.scene.position.set(width - 0.3, height + 0.38, depth - 0.85);
+    scene.add(gltf.scene);
+    var pillow = gltf.scene.clone()
+    pillow.scale.set(0.15, 0.15, 0.15);
+    pillow.rotation.y = -Math.PI / 3;
+    pillow.position.set(width + 0.6, height + 0.38, depth - 0.75);
+    scene.add(pillow);
   });
 }

@@ -25,6 +25,14 @@ const wardrobeWidth = 1.5;
 const wardrobeHeight = 2;
 const wardrobeDepth = 0.6;
 
+const tableWidth = -2;
+const tableHeight = 0.7;
+const tableDepth = -3.3;
+
+const bedWidth = 1.5;
+const bedHeight = 0.35;
+const bedDepth = -2.5;
+
 // Actions
 init();
 loadScene();
@@ -49,21 +57,33 @@ function init() {
     cameraControls.target.set(0, 1, 0);
     camera.lookAt(0, 1, 0);
 
-    //Light
-
     // Ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
+    var ambientLight = new THREE.AmbientLight(0x404040); // Grey color.
     scene.add(ambientLight);
 
-    // Directional light
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(0, 1, 0); // from top
-    scene.add(directionalLight);
+    // // Crear una luz direccional
+    // var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // Luz direccional blanca con intensidad 0.5
+    // directionalLight.position.set(0, 1, 0); // Posición de la luz
+    // scene.add(directionalLight);
 
-    // Point light (optional)
-    const pointLight = new THREE.PointLight(0xffffff, 0.5);
-    pointLight.position.set(0, 3, 0); // above the scene
-    scene.add(pointLight);
+    // // Crear una luz puntual
+    // var pointLight = new THREE.PointLight(0xffffcc, 0.5, 20); // Luz puntual roja con intensidad 1 y distancia 100
+    // pointLight.position.set(0, 3, 0); // Posición de la luz
+    // pointLight.decay = 2;
+    // scene.add(pointLight);
+
+    // Test of lights
+    for (let i = 1; i < 7; i++) {
+        var spotLight = new THREE.PointLight(0xffffcc, i / 10); // yellow
+        spotLight.position.set(0, 6, 0);
+        // spotLight.target.position.set(0, 0, 0); 
+        spotLight.distance = 20;
+        spotLight.decay = 1.5;
+        spotLight.angle = (45 + i * 3 * Math.PI) / 180;
+        const slHelper2 = new THREE.PointLightHelper(spotLight);
+        scene.add(spotLight, slHelper2);
+    }
+
 
     // // Events
     // renderer.domElement.addEventListener('dblclick', animate);
@@ -92,7 +112,7 @@ function loadScene() {
     //Lode Geometry using GEO from geometry.js
     GEO.createTable(scene);
     GEO.createBed(scene);
-    GEO.createWardrobe(scene,wardrobeWidth,wardrobeHeight,wardrobeDepth);
+    GEO.createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDepth);
 
     // Call the functions to create the room
     GEO.createRoom(scene);
@@ -103,12 +123,17 @@ function loadScene() {
 
 //Lode Models using MODELS from models.js
 function loadModels() {
-    MODELS.addClothesHanger(scene,wardrobeWidth,wardrobeHeight)
-    MODELS.tShirtsFolded(scene,wardrobeWidth,wardrobeHeight)
-    MODELS.cowboyBoots(scene,wardrobeWidth,wardrobeHeight)
-    MODELS.flipFlops(scene,wardrobeWidth,wardrobeHeight)
-    MODELS.pairOfShoes(scene,wardrobeWidth,wardrobeHeight)
-    MODELS.sneakers(scene,wardrobeWidth,wardrobeHeight)
+    MODELS.addClothesHanger(scene, wardrobeWidth, wardrobeHeight)
+    MODELS.tShirtsFolded(scene, wardrobeWidth, wardrobeHeight)
+    MODELS.cowboyBoots(scene, wardrobeWidth, wardrobeHeight)
+    MODELS.flipFlops(scene, wardrobeWidth, wardrobeHeight)
+    MODELS.pairOfShoes(scene, wardrobeWidth, wardrobeHeight)
+    MODELS.sneakers(scene, wardrobeWidth, wardrobeHeight)
+    MODELS.dualMonitors(scene, tableWidth, tableHeight, tableDepth)
+    MODELS.pc(scene, tableWidth, tableHeight, tableDepth)
+    MODELS.mug(scene, tableWidth, tableHeight, tableDepth)
+    MODELS.pencil(scene, tableWidth, tableHeight, tableDepth)
+    MODELS.pillow(scene, bedWidth, bedHeight, bedDepth)
 }
 
 function setupGUI() {
@@ -134,6 +159,7 @@ function update() {
 
     ground.material.setValues({ color: effectController.groundColor });
     TWEEN.update();
+    scene.spotLight.position;
 }
 
 function render() {
