@@ -24,7 +24,7 @@ export function createTable(scene, tableSize, legSize) {
     // Create table legs
 
     const textureLoaderLeg = new THREE.TextureLoader();
-    const textureLeg = textureLoaderLeg.load('textures/wood5.jpg'); // https://pin.it/63mPV6T2T
+    const textureLeg = textureLoaderLeg.load('textures/wood5.jpeg'); // https://pin.it/63mPV6T2T
     const legMaterial = new THREE.MeshPhongMaterial({ map: textureLeg });
     const legGeometry = new THREE.BoxGeometry(0.1, 0.7, 0.1);
 
@@ -84,8 +84,10 @@ export function createTable(scene, tableSize, legSize) {
 
     const drawer1Group = new THREE.Group();
     drawer1Group.add(drawerGroundMesh, drawerBackMesh, drawerFrontMesh, drawerLeftMesh, drawerRightMesh, knobMesh);
+    drawer1Group.name = 'LDrawer'
 
     const drawer2Group = drawer1Group.clone();
+    drawer2Group.name = 'RDrawer'
     drawer2Group.position.set(0.43, 0, 0);
 
 
@@ -109,7 +111,7 @@ export function createTable(scene, tableSize, legSize) {
 export function createBed(scene) {
     // Create the bed base
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('textures/wood5.jpg');     // https://pin.it/63mPV6T2T
+    const texture = textureLoader.load('textures/wood5.jpeg');     // https://pin.it/63mPV6T2T
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(3, 3);
@@ -124,7 +126,7 @@ export function createBed(scene) {
     const textureMattressLoader = new THREE.TextureLoader();
     const textureMattress = textureMattressLoader.load('textures/mattress.jpeg');// https://pin.it/6niXeX6ep
 
-    const mattressMaterial = new THREE.MeshPhongMaterial({ map: textureMattress });
+    const mattressMaterial = new THREE.MeshStandardMaterial({ map: textureMattress });
     const mattressMesh = new THREE.Mesh(mattressGeometry, mattressMaterial);
     mattressMesh.position.set(0, 0.15, 0)
     // Create bed legs
@@ -156,13 +158,17 @@ export function createBed(scene) {
     return bedGroup;
 }
 
-// // Function to create a wardrobe with double doors
+// Function to create a wardrobe with double doors
 export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDepth) {
 
     // Create the doors
     const doorGeometry = new THREE.BoxGeometry(wardrobeWidth / 2, wardrobeHeight, 0.05);
-    const doorMaterial1 = new THREE.MeshStandardMaterial({ color: 'blue' });
-    const doorMaterial2 = new THREE.MeshStandardMaterial({ color: 'red' });
+    const textureLoader1 = new THREE.TextureLoader();
+    const texture1 = textureLoader1.load('textures/wood5.jpeg');// https://pin.it/63mPV6T2T
+    const doorMaterial1 = new THREE.MeshStandardMaterial({ map: texture1 });
+    const textureLoader2 = new THREE.TextureLoader();
+    const texture2 = textureLoader2.load('textures/wood5.jpeg');// https://pin.it/63mPV6T2T
+    const doorMaterial2 = new THREE.MeshStandardMaterial({ map: texture2 });
     const door1 = new THREE.Mesh(doorGeometry, doorMaterial1);
     const door2 = new THREE.Mesh(doorGeometry, doorMaterial2);
 
@@ -174,10 +180,9 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     const backGeometry = new THREE.BoxGeometry(wardrobeWidth, wardrobeHeight, 0.05);
 
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('textures/wood4.jpg');//https://pin.it/1WjkqDZq5
+    const texture = textureLoader.load('textures/wood5.jpeg');// https://pin.it/63mPV6T2T
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(3, 3);
     const wallMaterial = new THREE.MeshPhongMaterial({ map: texture });
     const backWall = new THREE.Mesh(backGeometry, wallMaterial);
     const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.05, wardrobeHeight, wardrobeDepth), wallMaterial);
@@ -218,12 +223,13 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     // Position the top and bottom coat rack 
     coatRack.rotation.z = -Math.PI / 2; // Rotate 90 degrees to face into the room
     coatRack.position.set(0, coatRackPosition, 0);
-
+    door1.name = 'RDoor'
+    door2.name = 'LDoor'
     // Create a group for the wardrobe and doors
     const wardrobeGroup = new THREE.Group();
     wardrobeGroup.add(
-        // door1,
-        // door2,
+        door1,
+        door2,
         backWall,
         leftWall,
         rightWall,
@@ -246,7 +252,7 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     wardrobe3Group.position.set(4 + 0.2 - wardrobeWidth / 2, wardrobeHeight / 2 + 0.1, wardrobeWidth * 2);
     scene.add(wardrobe3Group);
     // Return the wardrobe group
-    return wardrobeGroup;
+    return [wardrobeGroup,wardrobe2Group,wardrobe3Group]
 }
 
 
@@ -258,6 +264,7 @@ export function createRoom(scene) {
     const texture = textureLoader.load('textures/wood2.jpg  '); // https://pin.it/6ejpZ3D3M
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
+    texture.alphaMap = THREE.Loader;    
     texture.repeat.set(3, 3);
     const groundMaterial = new THREE.MeshPhongMaterial({ map: texture });
     const groundGeometry = new THREE.BoxGeometry(8, 0.1, 8);
@@ -274,17 +281,30 @@ export function createWalls(scene) {
 
     // Load texture
 
+    const backTextureLoader1 = new THREE.TextureLoader();
+    const backTexture1 = backTextureLoader1.load('textures/WallWindow.png');// https://pin.it/4lNft87Vn
+
+    const backTextureLoader2 = new THREE.TextureLoader();
+    const backTexture2 = backTextureLoader2.load('textures/WallWindow2.png');// https://pin.it/4lNft87Vn
+
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('textures/wall2.jpg');// https://pin.it/4lNft87Vn
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(3, 3);
+    const texture = textureLoader.load('textures/Wall.jpg');// https://pin.it/4lNft87Vn
+
     // Apply texture to the material
     const wallMaterial = new THREE.MeshPhongMaterial({ map: texture });
 
+    const backWallMaterial = [
+        new THREE.MeshPhongMaterial({ map: texture }),
+        new THREE.MeshPhongMaterial({ map: texture }),
+        new THREE.MeshPhongMaterial({ map: texture }),
+        new THREE.MeshPhongMaterial({ map: texture }),
+        new THREE.MeshPhongMaterial({ map: backTexture1,transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: backTexture2,transparent: true, }),
+    ]
+
     // Back wall
     const backWallGeometry = new THREE.BoxGeometry(8, wallHeight, wallThickness);
-    const backWallMesh = new THREE.Mesh(backWallGeometry, wallMaterial);
+    const backWallMesh = new THREE.Mesh(backWallGeometry, backWallMaterial);
     backWallMesh.position.set(0, wallHeight / 2 + 0.05, -4 + wallThickness / 2);
     scene.add(backWallMesh);
 
@@ -296,26 +316,14 @@ export function createWalls(scene) {
     return (backWallMesh, rightWallMesh)
 }
 
-// // Function to create the window on the back wall
-// export function createWindow(scene) {
-//     const windowFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // Brown
-//     const windowGlassMaterial = new THREE.MeshStandardMaterial({ color: 0xADD8E6 }); // Light blue
-
-//     const windowFrameGeometry = new THREE.BoxGeometry(3, 1.5, 0.1);
-//     const windowFrameMesh = new THREE.Mesh(windowFrameGeometry, windowFrameMaterial);
-//     windowFrameMesh.position.set(-2, 1.7, -3.8); // Adjust position
-//     scene.add(windowFrameMesh);
-
-//     const windowMargin = 0.2
-//     const windowGlassGeometry = new THREE.BoxGeometry(3 - windowMargin, 1.5 - windowMargin, 0.05);
-//     const windowGlassMesh = new THREE.Mesh(windowGlassGeometry, windowGlassMaterial);
-//     windowGlassMesh.position.set(-2, 1.7, -3.7); // Adjust position
-//     scene.add(windowGlassMesh);
-// }
-
 // Function to create the frame on the right wall
 export function createFrame(scene) {
-    const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // Brown
+    const textureLoader1 = new THREE.TextureLoader();
+    const texture1 = textureLoader1.load('textures/wood4.jpeg');//https://pin.it/1WjkqDZq5
+    texture1.wrapS = THREE.RepeatWrapping;
+    texture1.wrapT = THREE.RepeatWrapping;
+    texture1.repeat.set(3, 3);
+    const frameMaterial = new THREE.MeshPhongMaterial({ map: texture1 });
     const frameGeometry = new THREE.BoxGeometry(1, 1, 0.1);
     const frameMesh = new THREE.Mesh(frameGeometry, frameMaterial);
     frameMesh.position.set(4 - 0.2 / 2 - 0.1, 2, -2); // Adjust position
@@ -334,3 +342,28 @@ export function createFrame(scene) {
 }
 
 
+export function marks(scene) {
+    
+    const bedMarkGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+    const bedMarkMaterial = new THREE.MeshPhongMaterial({ color: 'white', transparent: true, opacity: 0.5 });
+    const bedMark = new THREE.Mesh(bedMarkGeometry, bedMarkMaterial);
+    bedMark.position.set(1.5,4,-2.5);
+    bedMark.name = 'bedMark'
+    
+    const tableMarkGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+    const tableMarkMaterial = new THREE.MeshPhongMaterial({ color: 'white', transparent: true, opacity: 0.5 });
+    const tableMark = new THREE.Mesh(tableMarkGeometry, tableMarkMaterial);
+    tableMark.position.set(-2,4,-3.5);
+    tableMark.name = 'tableMark'
+    
+    const wardrobeMarkGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+    const wardrobeMarkMaterial = new THREE.MeshPhongMaterial({ color: 'white', transparent: true, opacity: 0.5 });
+    const wardrobeMark = new THREE.Mesh(wardrobeMarkGeometry, wardrobeMarkMaterial);
+    wardrobeMark.position.set(3.5,4,1.6);
+    wardrobeMark.name = 'wardrobeMark'
+
+    const mark = new THREE.Group();
+    mark.add(bedMark,wardrobeMark,tableMark)
+    scene.add(mark) 
+    return mark
+}
