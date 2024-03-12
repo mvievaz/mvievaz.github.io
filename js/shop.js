@@ -34,6 +34,9 @@ let lDrawer, rDrawer
 let marked
 let bedMark, tableMark, wardrobeMark
 
+let text
+let bedText, tableText, wardrobeText
+
 let flagMarked
 
 let backGroundN, backGroundD
@@ -154,7 +157,10 @@ function loadScene() {
     GEO.createRoom(scene);
     GEO.createWalls(scene);
     GEO.createFrame(scene);
-
+    text = GEO.text(scene);
+    bedText = text.getObjectByName('bed');
+    tableText = text.getObjectByName('table');
+    wardrobeText = text.getObjectByName('wardrobe');
 }
 
 // Lode Models using MODELS from models.js
@@ -224,6 +230,9 @@ function animate(event) {
 // Update function
 function update() {
     TWEEN.update();
+    bedText.rotation.copy(camera.rotation)
+    tableText.rotation.copy(camera.rotation)
+    wardrobeText.rotation.copy(camera.rotation)
 }
 
 // Render function
@@ -361,6 +370,7 @@ function lightOff() {
 // Move camera to table
 function moveToTable() {
     initialCamPos = camera.position.clone();
+    cameraControls.target.set(-2, 1, -4);
     new TWEEN.Tween(camera.position)
         .to({ x: -2, y: 2, z: 0 }, 2000)
         .onComplete(() => {
@@ -369,12 +379,18 @@ function moveToTable() {
             cameraControls.minAzimuthAngle = - 4 * Math.PI / 12;
             cameraControls.maxAzimuthAngle = 1 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
-            cameraControls.target.set(-2, 1, -4);
         })
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
     // Ca1mera.rotation
-    // new TWEEN.Tween(camera.rotation)
+    new TWEEN.Tween(camera.rotation)
+        .to({ x: 0, y: 0, z: 0 })
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    new TWEEN.Tween(tableText.position)
+        .to({ x: -2, y: 3, z: -3.5 }, 2000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
     flagMarked = 1;
     scene.remove(marked)
 }
@@ -382,6 +398,7 @@ function moveToTable() {
 // Move camera to bed
 function moveToBed() {
     initialCamPos = camera.position.clone();
+    cameraControls.target.set(1.5, 1, -2);
     new TWEEN.Tween(camera.position)
         .to({ x: 1.5, y: 2, z: 1 }, 2000)
         .onComplete(() => {
@@ -390,8 +407,16 @@ function moveToBed() {
             cameraControls.minAzimuthAngle = - 4.5 * Math.PI / 12;
             cameraControls.maxAzimuthAngle = 0 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
-            cameraControls.target.set(1.5, 1, -2);
         })
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    // Ca1mera.rotation
+    new TWEEN.Tween(camera.rotation)
+        .to({ x: 0, y: 0, z: 0 })
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    new TWEEN.Tween(bedText.position)
+        .to({ x: 1.5, y: 3, z: -2.5 }, 2000)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
     flagMarked = 1;
@@ -413,25 +438,50 @@ function moveToWardrobe() {
         })
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
+    // Ca1mera.rotation
+    new TWEEN.Tween(camera.rotation)
+        .to({ x: 0, y: -Math.PI / 2, z: 0 })
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    new TWEEN.Tween(wardrobeText.position)
+        .to({ x: 3.5, y: 3, z: 1.6 }, 2000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
     flagMarked = 1;
     scene.remove(marked)
 }
 
 // Move camera back
 function moveBack() {
-    initialCamPos = camera.position.clone();
+    cameraControls.target.set(0, 1, 0);
     new TWEEN.Tween(camera.position)
-        .to({ x: 0.5, y: 2, z: 7 }, 2000)
+        .to(initialCamPos, 2000)
         .onComplete(() => {
             cameraControls.minDistance = 5;
             cameraControls.maxDistance = 10;
             cameraControls.minAzimuthAngle = - 7 * Math.PI / 12;
             cameraControls.maxAzimuthAngle = Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
-            cameraControls.target.set(0, 1, 0);
         })
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
+    new TWEEN.Tween(camera.rotation)
+        .to({ x: 0, y: 0, z: 0 })
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    new TWEEN.Tween(wardrobeText.position)
+        .to({ x: 3.5, y: 5, z: 1.6 }, 2000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    new TWEEN.Tween(bedText.position)
+        .to({ x: 1.5, y: 5, z: -2.5 }, 2000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    new TWEEN.Tween(tableText.position)
+        .to({ x: -2, y: 5, z: -3.5 }, 2000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    flagMarked = 1;
     flagMarked = 0;
     scene.add(marked)
 }

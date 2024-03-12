@@ -367,3 +367,62 @@ export function marks(scene) {
     scene.add(mark)
     return mark
 }
+
+
+export function text(scene) {
+
+    const text = new THREE.Group();
+
+    const bedTextureLoader = new THREE.TextureLoader();
+    const bedTexture = bedTextureLoader.load('textures/BedText.png',);
+    const emptyTextureLoader = new THREE.TextureLoader();
+    const emptyTexture = emptyTextureLoader.load('textures/Empty.png',);
+    const bedTextMaterial = [
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: bedTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+    ]
+    const bedTextGeometry = new THREE.BoxGeometry(1, 1, 0.001);
+    const bedTextMesh = new THREE.Mesh(bedTextGeometry, bedTextMaterial);
+    bedTextMesh.position.set(1.5, 5, -2.5); // Adjust position
+    bedTextMesh.name = 'bed'
+    text.add(bedTextMesh);
+
+    const tableTextureLoader = new THREE.TextureLoader();
+    const tableTexture = tableTextureLoader.load('textures/TableText.png');
+    const tableTextMaterial = [
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: tableTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+    ]
+    const tableTextGeometry = new THREE.BoxGeometry(1, 1, 0.001);
+    const tableTextMesh = new THREE.Mesh(tableTextGeometry, tableTextMaterial);
+    tableTextMesh.position.set(-2, 5, -3.5); // Adjust position
+    tableTextMesh.name = 'table'
+    text.add(tableTextMesh);
+
+    const wardrobeTextureLoader = new THREE.TextureLoader();
+    const wardrobeTexture = wardrobeTextureLoader.load('textures/WardrobeText.png');
+    const wardrobeTextMaterial = [
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: wardrobeTexture, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: emptyTexture, transparent: true, }),
+    ]
+    const wardrobeTextGeometry = new THREE.BoxGeometry(1, 1, 0.001);
+    const wardrobeTextMesh = new THREE.Mesh(wardrobeTextGeometry, wardrobeTextMaterial);
+    wardrobeTextMesh.position.set(3.5, 5, 1.6); // Adjust position
+    wardrobeTextMesh.name = 'wardrobe'
+    text.add(wardrobeTextMesh);
+
+    scene.add(text);
+    return text
+}
