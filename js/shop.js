@@ -34,6 +34,10 @@ let lDrawer, rDrawer
 let marked
 let bedMark, tableMark, wardrobeMark
 
+let flagMarked
+
+let backGroundN, backGroundD
+
 // Constants
 const wardrobeWidth = 1.5;
 const wardrobeHeight = 2;
@@ -56,6 +60,7 @@ init();
 loadScene();
 loadModels();
 setupGUI();
+loadNight();
 render();
 
 // Initialization function
@@ -67,6 +72,7 @@ function init() {
 
     // Instantiate the root node of the scene.
     scene = new THREE.Scene();
+    loadDay();
     backGroundDay();
 
     // Instantiate the camera
@@ -92,9 +98,15 @@ function init() {
 
     // Test of lights
     lightOn();
-
+    flagMarked = 0;
     // Add the click event to the document.
     document.addEventListener('click', onMouseClick, false);
+    // B key
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'b' || event.key === 'B') {
+            if (flagMarked) moveBack();
+        }
+    });
 
     // Remove
     // // Events
@@ -106,24 +118,16 @@ function init() {
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
+
 }
 
 //  Load all scene (Geometry using GEO from geometry.js)
 function loadScene() {
 
-    // Material
-    const material = new THREE.MeshBasicMaterial({ color: 'yellow', wireframe: true });
-
-    // Ground
-    ground = new THREE.Mesh(new THREE.PlaneGeometry(10, 10, 10, 10), material);
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -0.2;
-    scene.add(ground)
-
     // Axes
     scene.add(new THREE.AxesHelper(3));
 
-    // Stats
+    // Stats // Revisar o //Remove
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
     document.body.appendChild(stats.dom);
@@ -187,6 +191,8 @@ function setupGUI() {
     menuControllerTimeObject.onChange(handleMenuChangeTime);
     const menuControllerLightObject = gui.add(menuControllerLight, 'selectedOption', menuControllerLight.options).name('Light');
     menuControllerLightObject.onChange(handleMenuChangeLight);
+
+    gui.add({ message: "Press B to go back" }, 'message').name('Instructions');
 
 }
 
@@ -296,11 +302,21 @@ function isMark(clickedObject) {
     }
 }
 
-// Save Night and day so we don't needed to load every time ??? //Remove
 // Switch to Day
 function backGroundDay() {
-    const backLoader = new THREE.CubeTextureLoader();
-    const backGround = backLoader.load([
+    scene.background = backGroundD;
+}
+
+// Switch to night
+function backGroundNight() {
+
+    scene.background = backGroundN;
+}
+
+// Function to load Day background texture
+function loadDay() {
+    const backLoaderDay = new THREE.CubeTextureLoader();
+    backGroundD = backLoaderDay.load([
         'textures/skyBoxDay/Daylight_Box_Right.bmp', // Right
         'textures/skyBoxDay/Daylight_Box_Left.bmp', // Left
         'textures/skyBoxDay/Daylight_Box_Top.bmp', // Top
@@ -308,13 +324,12 @@ function backGroundDay() {
         'textures/skyBoxDay/Daylight_Box_Front.bmp', // Front
         'textures/skyBoxDay/Daylight_Box_Back.bmp'  // Back
     ]);
-    scene.background = backGround;
 }
 
-// Switch to night
-function backGroundNight() {
-    const backLoader = new THREE.CubeTextureLoader();
-    const backGround = backLoader.load([
+// Function to load Night background texture
+function loadNight() {
+    const backLoaderNight = new THREE.CubeTextureLoader();
+    backGroundN = backLoaderNight.load([
         'textures/skyBoxNight/nightsky_west.bmp', // Right
         'textures/skyBoxNight/nightsky_east.bmp', // Left
         'textures/skyBoxNight/nightsky_up.bmp', // Top
@@ -322,7 +337,6 @@ function backGroundNight() {
         'textures/skyBoxNight/nightsky_south.bmp', // Front
         'textures/skyBoxNight/nightsky_north.bmp'  // Back
     ]);
-    scene.background = backGround;
 }
 
 // Turn on the light
@@ -347,7 +361,6 @@ function lightOff() {
 // Move camera to table
 function moveToTable() {
     initialCamPos = camera.position.clone();
-    console.log('TableMark');
     new TWEEN.Tween(camera.position)
         .to({ x: -2, y: 2, z: 0 }, 2000)
         .onComplete(() => {
@@ -361,40 +374,47 @@ function moveToTable() {
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
     // Ca1mera.rotation
+    // new TWEEN.Tween(camera.rotation)
+    flagMarked = 1;
+    scene.remove(marked)
 }
 
 // Move camera to bed
 function moveToBed() {
     initialCamPos = camera.position.clone();
     new TWEEN.Tween(camera.position)
-        .to({ x: -2, y: 2, z: 0 }, 2000)
+        .to({ x: 1.5, y: 2, z: 1 }, 2000)
         .onComplete(() => {
             cameraControls.minDistance = 3;
             cameraControls.maxDistance = 6;
-            cameraControls.minAzimuthAngle = - 4 * Math.PI / 12;
-            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12;
+            cameraControls.minAzimuthAngle = - 4.5 * Math.PI / 12;
+            cameraControls.maxAzimuthAngle = 0 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
-            cameraControls.target.set(-2, 1, -4);
+            cameraControls.target.set(1.5, 1, -2);
         })
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
+    flagMarked = 1;
+    scene.remove(marked)
 }
 
 // Move camera to wardrobe
 function moveToWardrobe() {
     initialCamPos = camera.position.clone();
     new TWEEN.Tween(camera.position)
-        .to({ x: -2, y: 2, z: 0 }, 2000)
+        .to({ x: -0.5, y: 2, z: 2 }, 2000)
         .onComplete(() => {
-            cameraControls.minDistance = 3;
+            cameraControls.minDistance = 4.5;
             cameraControls.maxDistance = 6;
-            cameraControls.minAzimuthAngle = - 4 * Math.PI / 12;
-            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12;
+            cameraControls.minAzimuthAngle = - 10 * Math.PI / 12;
+            cameraControls.maxAzimuthAngle = 0 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
-            cameraControls.target.set(-2, 1, -4);
+            cameraControls.target.set(4, 2, 2);
         })
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
+    flagMarked = 1;
+    scene.remove(marked)
 }
 
 // Move camera back
@@ -408,7 +428,10 @@ function moveBack() {
             cameraControls.minAzimuthAngle = - 7 * Math.PI / 12;
             cameraControls.maxAzimuthAngle = Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
+            cameraControls.target.set(0, 1, 0);
         })
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
+    flagMarked = 0;
+    scene.add(marked)
 }
