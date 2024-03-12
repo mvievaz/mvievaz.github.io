@@ -1,5 +1,5 @@
 /**
-  test.js 
+  shop.js 
 
   Main code for the project.
 

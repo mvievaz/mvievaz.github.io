@@ -1,6 +1,7 @@
 # mvievaz.github.io
 
-Tree.js project for AGM subject. 
+Tree.js project for AGM subject. The project consists of an online furniture store selling a table, a bed, and a triple wardrobe. 
+Users can visualize a room where they can see the furniture for sale, open and close drawers or doors, and change the lights to see their effect.
 
 ## ToC
 
