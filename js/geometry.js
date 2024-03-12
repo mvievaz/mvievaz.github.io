@@ -20,6 +20,7 @@ export function createTable(scene, tableSize, legSize) {
     const tableTopGeometry = new THREE.BoxGeometry(2, 0.1, 1);
     const tableTopMaterial = new THREE.MeshPhongMaterial({ map: texture });
     const tableTopMesh = new THREE.Mesh(tableTopGeometry, tableTopMaterial);
+    tableTopMesh.castShadow = true;
 
     // Create table legs
 
@@ -32,7 +33,10 @@ export function createTable(scene, tableSize, legSize) {
     const tableLeg2 = new THREE.Mesh(legGeometry, legMaterial);
     const tableLeg3 = new THREE.Mesh(legGeometry, legMaterial);
     const tableLeg4 = new THREE.Mesh(legGeometry, legMaterial);
-
+    tableLeg1.castShadow = true;
+    tableLeg2.castShadow = true;
+    tableLeg3.castShadow = true;
+    tableLeg4.castShadow = true;
     // Position table legs
     tableLeg1.position.set(-0.9, -0.7 / 2, 0.4);
     tableLeg2.position.set(-0.9, -0.7 / 2, -0.4);
@@ -43,13 +47,16 @@ export function createTable(scene, tableSize, legSize) {
     const drawerHoleMaterial = new THREE.MeshPhongMaterial({ map: textureLeg });
     const drawerHoleGroundGeometry = new THREE.BoxGeometry(0.9, 0.02, 0.9);
     const drawerHoleGroundMesh = new THREE.Mesh(drawerHoleGroundGeometry, drawerHoleMaterial);
+    drawerHoleGroundMesh.castShadow = true;
 
     const drawerHoleFrontBackGeometry = new THREE.BoxGeometry(0.9, 0.15, 0.02);
     const drawerHoleBackMesh = new THREE.Mesh(drawerHoleFrontBackGeometry, drawerHoleMaterial);
-
+    drawerHoleBackMesh.castShadow = true;
     const drawerHoleLeftRightGeometry = new THREE.BoxGeometry(0.02, 0.15, 0.9);
     const drawerHoleLeftMesh = new THREE.Mesh(drawerHoleLeftRightGeometry, drawerHoleMaterial);
+    drawerHoleLeftMesh.castShadow = true;
     const drawerHoleRightMesh = new THREE.Mesh(drawerHoleLeftRightGeometry, drawerHoleMaterial);
+    drawerHoleRightMesh.castShadow = true;
 
     drawerHoleGroundMesh.position.set(0.39, -0.17, 0);
     drawerHoleBackMesh.position.set(0.39, -0.1, -0.45);
@@ -60,14 +67,17 @@ export function createTable(scene, tableSize, legSize) {
     const drawerMaterial = new THREE.MeshPhongMaterial({ map: texture });
     const drawerGroundGeometry = new THREE.BoxGeometry(0.43, 0.02, 0.9);
     const drawerGroundMesh = new THREE.Mesh(drawerGroundGeometry, drawerMaterial);
-
+    drawerGroundMesh.castShadow = true;
     const drawerFrontBackGeometry = new THREE.BoxGeometry(0.43, 0.13, 0.02);
     const drawerBackMesh = new THREE.Mesh(drawerFrontBackGeometry, drawerMaterial);
     const drawerFrontMesh = new THREE.Mesh(drawerFrontBackGeometry, drawerMaterial);
-
+    drawerBackMesh.castShadow = true;
+    drawerFrontMesh.castShadow = true;
     const drawerLeftRightGeometry = new THREE.BoxGeometry(0.02, 0.13, 0.9);
     const drawerLeftMesh = new THREE.Mesh(drawerLeftRightGeometry, drawerMaterial);
+    drawerLeftMesh.castShadow = true;
     const drawerRightMesh = new THREE.Mesh(drawerLeftRightGeometry, drawerMaterial);
+    drawerRightMesh.castShadow = true;
 
     drawerGroundMesh.position.set(0.35 / 2, -0.15, 0);
     drawerBackMesh.position.set(0.35 / 2, -0.1, -0.43);
@@ -80,6 +90,7 @@ export function createTable(scene, tableSize, legSize) {
     const knobGeometry = new THREE.SphereGeometry(knobRadius, 32, 32);
     const knobMaterial = new THREE.MeshPhongMaterial({ map: textureLeg });
     const knobMesh = new THREE.Mesh(knobGeometry, knobMaterial);
+    knobMesh.castShadow = true;
     knobMesh.position.set(0.35 / 2, -0.1, 0.44 + 0.03); // Adjust position
 
     const drawer1Group = new THREE.Group();
@@ -99,7 +110,6 @@ export function createTable(scene, tableSize, legSize) {
     tableGroup.add(drawer1Group, drawer2Group)
     // Optionally, position the table
     tableGroup.position.set(-2, 0.7, -3.3);
-
     // Add the table group to the scene
     scene.add(tableGroup);
 
@@ -118,6 +128,7 @@ export function createBed(scene) {
     const bedBaseGeometry = new THREE.BoxGeometry(2, 0.1, 2.5);
     const bedBaseMaterial = new THREE.MeshPhongMaterial({ map: texture });
     const bedBaseMesh = new THREE.Mesh(bedBaseGeometry, bedBaseMaterial);
+    bedBaseMesh.castShadow = true;
 
     // Create the mattress
 
@@ -128,6 +139,7 @@ export function createBed(scene) {
 
     const mattressMaterial = new THREE.MeshStandardMaterial({ map: textureMattress });
     const mattressMesh = new THREE.Mesh(mattressGeometry, mattressMaterial);
+    mattressMesh.castShadow = true;
     mattressMesh.position.set(0, 0.15, 0)
     // Create bed legs
     const legGeometry = new THREE.BoxGeometry(0.1, 0.3, 0.1);
@@ -137,6 +149,10 @@ export function createBed(scene) {
     const bedLeg2 = new THREE.Mesh(legGeometry, legMaterial);
     const bedLeg3 = new THREE.Mesh(legGeometry, legMaterial);
     const bedLeg4 = new THREE.Mesh(legGeometry, legMaterial);
+    bedLeg1.castShadow = true;
+    bedLeg2.castShadow = true;
+    bedLeg3.castShadow = true;
+    bedLeg4.castShadow = true;
 
     // Position bed legs
     bedLeg1.position.set(-0.9, -0.15, 1.2);
@@ -169,9 +185,11 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     const textureLoader2 = new THREE.TextureLoader();
     const texture2 = textureLoader2.load('textures/wood4.jpeg');// https://pin.it/63mPV6T2T
     const doorMaterial2 = new THREE.MeshStandardMaterial({ map: texture2 });
+
     const door1 = new THREE.Mesh(doorGeometry, doorMaterial1);
     const door2 = new THREE.Mesh(doorGeometry, doorMaterial2);
-
+    door1.castShadow = true;
+    door2.castShadow = true;
     // Position the doors
     door1.position.set(wardrobeWidth / 4, 0, wardrobeDepth / 2 + 0.025);
     door2.position.set(-wardrobeWidth / 4, 0, wardrobeDepth / 2 + 0.025);
@@ -187,6 +205,9 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     const backWall = new THREE.Mesh(backGeometry, wallMaterial);
     const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.05, wardrobeHeight, wardrobeDepth), wallMaterial);
     const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.05, wardrobeHeight, wardrobeDepth), wallMaterial);
+    backWall.castShadow = true;
+    leftWall.castShadow = true;
+    rightWall.castShadow = true;
 
     // Position the walls
     backWall.position.set(0, 0, -wardrobeDepth / 2);
@@ -201,23 +222,28 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
 
     // Position the top and bottom
     topBottom.position.set(0, topPosition, 0);
+    topBottom.castShadow = true;
     const bottomClone = topBottom.clone();
     bottomClone.position.y = bottomPosition;
+    bottomClone.castShadow = true;
 
     //Create the top and bottom bookcase 
     const topBottomBookcaseGeometry = new THREE.BoxGeometry(wardrobeWidth - 0.1, 0.05, wardrobeDepth - 0.05);
     const topBottomBookcase = new THREE.Mesh(topBottomBookcaseGeometry, wallMaterial);
+    topBottomBookcase.castShadow = true;
     const topBookcase = wardrobeHeight / 2 - 0.3 - 0.05;
     const bottomBookcase = -wardrobeHeight / 2 + 0.2 + 0.05;
 
     // Position the top and bottom bookcase
     topBottomBookcase.position.set(0, topBookcase, 0);
     const bottomBookcaseClone = topBottomBookcase.clone();
+    bottomBookcaseClone.castShadow = true;
     bottomBookcaseClone.position.y = bottomBookcase;
 
     //Create the top and bottom coat rack 
     const coatRackGeometry = new THREE.CylinderGeometry(0.02, 0.02, wardrobeWidth - 0.1);
     const coatRack = new THREE.Mesh(coatRackGeometry, wallMaterial);
+    coatRack.castShadow = true;
     const coatRackPosition = topBookcase - 0.1;
 
     // Position the top and bottom coat rack 
@@ -255,7 +281,6 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     return [wardrobeGroup, wardrobe2Group, wardrobe3Group]
 }
 
-
 // Function to create the room (including ground)
 export function createRoom(scene) {
     // Ground
@@ -269,6 +294,7 @@ export function createRoom(scene) {
     const groundMaterial = new THREE.MeshPhongMaterial({ map: texture });
     const groundGeometry = new THREE.BoxGeometry(8, 0.1, 8);
     const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+    groundMesh.receiveShadow = true;
     scene.add(groundMesh);
     return groundMesh
 }
@@ -306,12 +332,16 @@ export function createWalls(scene) {
     const backWallGeometry = new THREE.BoxGeometry(8, wallHeight, wallThickness);
     const backWallMesh = new THREE.Mesh(backWallGeometry, backWallMaterial);
     backWallMesh.position.set(0, wallHeight / 2 + 0.05, -4 + wallThickness / 2);
+    backWallMesh.receiveShadow = true;
+    backWallMesh.castShadow = true;
     scene.add(backWallMesh);
 
     // Right wall
     const rightWallGeometry = new THREE.BoxGeometry(wallThickness, wallHeight, 8 - wallThickness);
     const rightWallMesh = new THREE.Mesh(rightWallGeometry, wallMaterial);
     rightWallMesh.position.set(4 - wallThickness / 2, wallHeight / 2 + 0.05, wallThickness / 2);
+    rightWallMesh.receiveShadow = true;
+    rightWallMesh.castShadow = true;
     scene.add(rightWallMesh);
     return [backWallMesh, rightWallMesh]
 }
@@ -328,6 +358,7 @@ export function createFrame(scene) {
     const frameMesh = new THREE.Mesh(frameGeometry, frameMaterial);
     frameMesh.position.set(4 - 0.2 / 2 - 0.1, 2, -2); // Adjust position
     frameMesh.rotation.y = Math.PI / 2; // Rotate 90 degrees to face into the room
+    frameMesh.castShadow = true;
     scene.add(frameMesh);
     // Cuadro
     const textureLoader = new THREE.TextureLoader();
@@ -337,6 +368,7 @@ export function createFrame(scene) {
     const pictureMesh = new THREE.Mesh(pictureGeometry, pictureMaterial);
     pictureMesh.position.set(4 - 0.3 / 2 - 0.1, 2, -2); // Adjust position
     pictureMesh.rotation.y = Math.PI / 2; // Rotate 90 degrees to face into the room
+    pictureMesh.castShadow = true;
     scene.add(pictureMesh);
     return [frameMesh, pictureMesh]
 }
@@ -368,7 +400,7 @@ export function marks(scene) {
     return mark
 }
 
-
+// Function to create text on top of the furniture
 export function text(scene) {
 
     const text = new THREE.Group();

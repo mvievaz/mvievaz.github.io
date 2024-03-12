@@ -147,6 +147,7 @@ export function pencil(scene, width, height, depth) {
     gltf.scene.scale.set(0.025, 0.025, 0.025);
     gltf.scene.rotation.y = Math.PI / 3;
     gltf.scene.position.set(width + 0.6, height - 0.13, depth - 0.2);
+    gltf.scene.name = 'pencil'
     scene.add(gltf.scene);
   });
 }

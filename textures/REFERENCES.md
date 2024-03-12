@@ -1,7 +1,7 @@
 # TEXTURE REFERENCES
 
-- Sky box day - [LINK](https://gamebanana.com/mods/8366)
-- Sky box night - [LINK](https://opengameart.org/content/sky-box-sunny-day)
+- Sky box day - [LINK](https://opengameart.org/content/sky-box-sunny-day)
+- Sky box night - [LINK](https://gamebanana.com/mods/8366)
 - Mattress - [LINK](https://pin.it/6niXeX6ep)
 - Picture - [LINK](https://www.sportskeeda.com/f1/f1-5-times-alonso-proved-he-is-one-of-the-goats)
 - Wall - (Edited with GIMP), original texture - [LINK](https://pin.it/4lNft87Vn)

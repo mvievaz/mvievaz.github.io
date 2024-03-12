@@ -8,7 +8,6 @@
 
 // Necessary modules
 
-import Stats from "../lib/stats.module.js";
 import * as THREE from "../lib/three.module.js";
 import { OrbitControls } from "../lib/OrbitControls.module.js";
 import { TWEEN } from "../lib/tween.module.min.js";
@@ -19,8 +18,8 @@ import * as GEO from "./geometry.js";
 
 // Standard variables
 
-let renderer, scene, camera, ground;
-let cameraControls, effectController;
+let renderer, scene, camera;
+let cameraControls;
 
 let initialCamPos
 
@@ -37,7 +36,12 @@ let bedMark, tableMark, wardrobeMark
 let text
 let bedText, tableText, wardrobeText
 
-let flagMarked
+let flagMarked = 0
+let flagDrawerL = 0, flagDrawerR = 0
+
+let flagRDoor = 0, flagLDoor = 0
+
+let pencil
 
 let backGroundN, backGroundD
 
@@ -71,6 +75,7 @@ function init() {
     // Instantiate the rendering engine
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true; 
     document.getElementById('container').appendChild(renderer.domElement);
 
     // Instantiate the root node of the scene.
@@ -101,7 +106,7 @@ function init() {
 
     // Test of lights
     lightOn();
-    flagMarked = 0;
+    
     // Add the click event to the document.
     document.addEventListener('click', onMouseClick, false);
     // B key
@@ -110,10 +115,6 @@ function init() {
             if (flagMarked) moveBack();
         }
     });
-
-    // Remove
-    // // Events
-    // renderer.domElement.addEventListener('dblclick', animate);
 
     // Maintain aspect ratio when resize
     window.addEventListener('resize', () => {
@@ -125,15 +126,7 @@ function init() {
 }
 
 //  Load all scene (Geometry using GEO from geometry.js)
-function loadScene() {
-
-    // Axes
-    scene.add(new THREE.AxesHelper(3));
-
-    // Stats // Revisar o //Remove
-    var stats = new Stats();
-    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.dom);
+function loadScene() {  
 
     // Create the furniture
 
@@ -222,11 +215,6 @@ function handleMenuChangeLight(selectedValue) {
     }
 }
 
-// Remove??
-function animate(event) {
-
-}
-
 // Update function
 function update() {
     TWEEN.update();
@@ -263,10 +251,8 @@ function onMouseClick(event) {
 // Check if is left (Return 0) or right(Return 1), if not return NaN
 function checkLR(object, l, r) {
     if (object === l) {
-        console.log('Hola LDoor');
         return 0; //Left
     } else if (object === r) {
-        console.log('Hola RDoor');
         return 1; //Right
     }
     return NaN; //Not a door
@@ -276,23 +262,106 @@ function checkLR(object, l, r) {
 function clickEvent(clickedObject) {
     switch (clickedObject.parent) {
         case wardrobeGroup:
-            checkLR(clickedObject, lDoor, rDoor);
+            animationObjectGroup(clickedObject, lDoor, rDoor);
             break;
         case wardrobeGroup2:
-            checkLR(clickedObject, lDoor2, rDoor2);
+            animationObjectGroup(clickedObject, lDoor2, rDoor2);
             break;
         case wardrobeGroup3:
-            checkLR(clickedObject, lDoor3, rDoor3);
+            animationObjectGroup(clickedObject, lDoor3, rDoor3);
             break;
         case lDrawer:
-            console.log('Hola LDrawer');
+            if (flagDrawerL) {
+                new TWEEN.Tween(lDrawer.position)
+                    .to({ z: 0 },3000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .start();
+                flagDrawerL = 0;
+            } else {
+                new TWEEN.Tween(lDrawer.position)
+                    .to({ z: 0.7 },3000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .start();
+                flagDrawerL = 1;
+            }
+
             break;
         case rDrawer:
-            console.log('Hola RDrawer');
+            pencil = scene.getObjectByName('pencil')
+            if (flagDrawerR) {
+                new TWEEN.Tween(rDrawer.position)
+                    .to({ z: 0 },3000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .start();
+                flagDrawerR = 0;
+                new TWEEN.Tween(pencil.position)
+                    .to({ z: -3.5 },3000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .start();
+            } else {
+                new TWEEN.Tween(rDrawer.position)
+                    .to({ z: 0.8 },3000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .start();
+                new TWEEN.Tween(pencil.position)
+                    .to({ z: -2.6 },3000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .start();
+                flagDrawerR = 1;
+            }
             break;
         case marked:
             isMark(clickedObject);
             break;
+    }
+}
+
+// Animation for wardrobe door
+function animationObjectGroup(clickedObject, lDoor, rDoor) {
+    if (checkLR(clickedObject, lDoor, rDoor)){
+        if (flagRDoor) {
+            rDoor.position.z = rDoor.position.z + 0.001
+            new TWEEN.Tween(rDoor.position)
+                .to({ x: wardrobeWidth / 4 },3000)
+                .onComplete(() =>
+                    rDoor.position.z = rDoor.position.z -0.001
+                )
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .start();
+            flagRDoor = 0;
+        } else {
+            rDoor.position.z = rDoor.position.z + 0.001
+            new TWEEN.Tween(rDoor.position)
+                .to({ x: - wardrobeWidth / 4},3000)
+                .onComplete(() =>
+                    rDoor.position.z = rDoor.position.z -0.001
+                )
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .start();
+            flagRDoor = 1;
+        }
+    } else {
+        if (flagLDoor) {
+            lDoor.position.z = lDoor.position.z + 0.001
+            new TWEEN.Tween(lDoor.position)
+                .to({ x: - wardrobeWidth / 4 },3000)
+                .onComplete(() =>
+                    lDoor.position.z = lDoor.position.z -0.001
+                )
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .start();
+            flagLDoor = 0;
+        } else {
+            lDoor.position.z = lDoor.position.z + 0.001
+            new TWEEN.Tween(lDoor.position)
+                .to({ x:+ wardrobeWidth / 4},3000)
+                .onComplete(() =>
+                    lDoor.position.z = lDoor.position.z -0.001
+                )
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .start();
+            flagLDoor = 1;
+        }
     }
 }
 
@@ -356,9 +425,8 @@ function lightOn() {
     spotLight.distance = 20;
     spotLight.decay = 1.5;
     spotLight.angle = (45 + 7 * 3 * Math.PI) / 180;
-    const slHelper2 = new THREE.PointLightHelper(spotLight);//Remove
-
-    scene.add(spotLight, slHelper2);
+    spotLight.castShadow = true;
+    scene.add(spotLight);
 }
 
 // Turn off the light
@@ -374,10 +442,10 @@ function moveToTable() {
     new TWEEN.Tween(camera.position)
         .to({ x: -2, y: 2, z: 0 }, 2000)
         .onComplete(() => {
-            cameraControls.minDistance = 3;
+            cameraControls.minDistance = 3.5;
             cameraControls.maxDistance = 6;
             cameraControls.minAzimuthAngle = - 4 * Math.PI / 12;
-            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12;
+            cameraControls.maxAzimuthAngle = 0.5 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
         })
         .easing(TWEEN.Easing.Quadratic.InOut)
@@ -400,11 +468,11 @@ function moveToBed() {
     initialCamPos = camera.position.clone();
     cameraControls.target.set(1.5, 1, -2);
     new TWEEN.Tween(camera.position)
-        .to({ x: 1.5, y: 2, z: 1 }, 2000)
+        .to({ x: 1.5, y: 2, z: 2 }, 2000)
         .onComplete(() => {
             cameraControls.minDistance = 3;
             cameraControls.maxDistance = 6;
-            cameraControls.minAzimuthAngle = - 4.5 * Math.PI / 12;
+            cameraControls.minAzimuthAngle = - 2.5 * Math.PI / 12;
             cameraControls.maxAzimuthAngle = 0 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
         })
@@ -454,6 +522,16 @@ function moveToWardrobe() {
 // Move camera back
 function moveBack() {
     cameraControls.target.set(0, 1, 0);
+    let rotationY
+    if (initialCamPos.x < -4) {
+        if (initialCamPos.z > 4 ) {
+            rotationY = - Math.PI / 4
+        } else {
+            rotationY = - Math.PI / 2
+        }
+    } else {
+        rotationY = 0
+    }
     new TWEEN.Tween(camera.position)
         .to(initialCamPos, 2000)
         .onComplete(() => {
@@ -466,7 +544,7 @@ function moveBack() {
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
     new TWEEN.Tween(camera.rotation)
-        .to({ x: 0, y: 0, z: 0 })
+        .to({ x: 0, y: rotationY, z: 0 })
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
     new TWEEN.Tween(wardrobeText.position)
@@ -481,7 +559,6 @@ function moveBack() {
         .to({ x: -2, y: 5, z: -3.5 }, 2000)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
-    flagMarked = 1;
     flagMarked = 0;
     scene.add(marked)
 }
