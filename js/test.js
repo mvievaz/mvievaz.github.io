@@ -7,6 +7,7 @@
 */
 
 // Necessary modules
+
 import Stats from "../lib/stats.module.js";
 import * as THREE from "../lib/three.module.js";
 import { OrbitControls } from "../lib/OrbitControls.module.js";
@@ -15,27 +16,11 @@ import { GUI } from "../lib/lil-gui.module.min.js";
 
 import * as MODELS from "./models.js";
 import * as GEO from "./geometry.js";
+
 // Standard variables
+
 let renderer, scene, camera, ground;
 let cameraControls, effectController;
-
-//Cont
-
-const wardrobeWidth = 1.5;
-const wardrobeHeight = 2;
-const wardrobeDepth = 0.6;
-
-const tableWidth = -2;
-const tableHeight = 0.7;
-const tableDepth = -3.3;
-
-const bedWidth = 1.5;
-const bedHeight = 0.35;
-const bedDepth = -2.5;
-
-// Detectar clics en el objeto
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
 
 let initialCamPos
 
@@ -49,6 +34,23 @@ let lDrawer, rDrawer
 let marked
 let bedMark, tableMark, wardrobeMark
 
+// Constants
+const wardrobeWidth = 1.5;
+const wardrobeHeight = 2;
+const wardrobeDepth = 0.6;
+
+const tableWidth = -2;
+const tableHeight = 0.7;
+const tableDepth = -3.3;
+
+const bedWidth = 1.5;
+const bedHeight = 0.35;
+const bedDepth = -2.5;
+
+// Detect clicks on the object
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
 // Actions
 init();
 loadScene();
@@ -56,6 +58,7 @@ loadModels();
 setupGUI();
 render();
 
+// Initialization function
 function init() {
     // Instantiate the rendering engine
     renderer = new THREE.WebGLRenderer();
@@ -74,13 +77,13 @@ function init() {
     cameraControls.target.set(0, 1, 0);
     camera.lookAt(0, 1, 0);
 
-    // Limitar la distancia mínima y máxima de la cámara
-    cameraControls.minDistance = 5; // Distancia mínima permitida
-    cameraControls.maxDistance = 10; // Distancia máxima permitida
+    // Limit the minimum and maximum distance of the camera.
+    cameraControls.minDistance = 5;
+    cameraControls.maxDistance = 10;
 
-    // Limitar el giro de la cámara
-    cameraControls.minAzimuthAngle = - 7 * Math.PI / 12 ;
-    cameraControls.maxAzimuthAngle =  Math.PI / 12 ; 
+    // Limit the camera's rotation.
+    cameraControls.minAzimuthAngle = - 7 * Math.PI / 12;
+    cameraControls.maxAzimuthAngle = Math.PI / 12;
     cameraControls.maxPolarAngle = Math.PI / 2;
 
     // Ambient light
@@ -90,12 +93,14 @@ function init() {
     // Test of lights
     lightOn();
 
-    // Agregar el evento clic al documento
+    // Add the click event to the document.
     document.addEventListener('click', onMouseClick, false);
 
+    // Remove
     // // Events
     // renderer.domElement.addEventListener('dblclick', animate);
 
+    // Maintain aspect ratio when resize
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -103,9 +108,9 @@ function init() {
     });
 }
 
+//  Load all scene (Geometry using GEO from geometry.js)
 function loadScene() {
 
-    
     // Material
     const material = new THREE.MeshBasicMaterial({ color: 'yellow', wireframe: true });
 
@@ -125,13 +130,13 @@ function loadScene() {
 
     // Create the furniture
 
-    //Lode Geometry using GEO from geometry.js
+    // Lode Geometry using GEO from geometry.js
     tableGroup = GEO.createTable(scene);
-    lDrawer = tableGroup.getObjectByName("LDrawer") 
+    lDrawer = tableGroup.getObjectByName("LDrawer")
     rDrawer = tableGroup.getObjectByName("RDrawer")
     GEO.createBed(scene);
-    [wardrobeGroup,wardrobeGroup2, wardrobeGroup3] = GEO.createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDepth);
-    lDoor = wardrobeGroup.getObjectByName("LDoor") 
+    [wardrobeGroup, wardrobeGroup2, wardrobeGroup3] = GEO.createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDepth);
+    lDoor = wardrobeGroup.getObjectByName("LDoor")
     rDoor = wardrobeGroup.getObjectByName("RDoor")
     lDoor2 = wardrobeGroup2.getObjectByName("LDoor")
     rDoor2 = wardrobeGroup2.getObjectByName("RDoor")
@@ -148,7 +153,7 @@ function loadScene() {
 
 }
 
-//Lode Models using MODELS from models.js
+// Lode Models using MODELS from models.js
 function loadModels() {
     MODELS.addClothesHanger(scene, wardrobeWidth, wardrobeHeight)
     MODELS.tShirtsFolded(scene, wardrobeWidth, wardrobeHeight)
@@ -163,15 +168,16 @@ function loadModels() {
     MODELS.pillow(scene, bedWidth, bedHeight, bedDepth)
 }
 
+// Set up GUI using lil-gui module
 function setupGUI() {
-    
+
     const menuControllerTime = {
-        options: ['Day', 'Night'], // Lista de opciones
-        selectedOption: 'Day' // Opción seleccionada inicialmente
+        options: ['Day', 'Night'], // List of options
+        selectedOption: 'Day' // Initially selected option
     };
     const menuControllerLight = {
-        options: ['On', 'Off'], // Lista de opciones
-        selectedOption: 'On' // Opción seleccionada inicialmente
+        options: ['On', 'Off'], // List of options
+        selectedOption: 'On' // Initially selected option
     };
     // Creation UI
     const gui = new GUI();
@@ -184,7 +190,7 @@ function setupGUI() {
 
 }
 
-// Función para manejar el cambio en la selección del menú
+// Function to handle the change in menu selection
 function handleMenuChangeTime(selectedValue) {
     if (selectedValue === 'Night') {
         backGroundNight()
@@ -194,6 +200,7 @@ function handleMenuChangeTime(selectedValue) {
     }
 }
 
+// Function to handle the change in menu selection
 function handleMenuChangeLight(selectedValue) {
     if (selectedValue === 'On') {
         lightOn();
@@ -203,29 +210,33 @@ function handleMenuChangeLight(selectedValue) {
     }
 }
 
+// Remove??
 function animate(event) {
 
 }
 
+// Update function
 function update() {
     TWEEN.update();
 }
 
+// Render function
 function render() {
     requestAnimationFrame(render);
     update();
     renderer.render(scene, camera);
 }
 
+// Function to handle mouse click
 function onMouseClick(event) {
-    // Calcula la posición del mouse en el rango [-1, 1]
+    // Calculate the mouse position within the range [-1, 1]
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-    // Establece el origen del rayo desde la posición de la cámara y la dirección del vector del mouse
+    // Set the ray origin from the camera position and the direction of the mouse vector
     raycaster.setFromCamera(mouse, camera);
 
-    // Calcula los objetos que intersectan con el rayo
+    // Calculate the objects intersecting with the ray
     const intersects = raycaster.intersectObjects(scene.children);
 
     if (intersects.length > 0) {
@@ -234,27 +245,29 @@ function onMouseClick(event) {
     }
 }
 
-function checkLR(object,l,r) {
-    if( object === l) {
+// Check if is left (Return 0) or right(Return 1), if not return NaN
+function checkLR(object, l, r) {
+    if (object === l) {
         console.log('Hola LDoor');
         return 0; //Left
-        } else if (object === r) {
+    } else if (object === r) {
         console.log('Hola RDoor');
         return 1; //Right
-    } 
+    }
     return NaN; //Not a door
 }
 
+// Check what has been clicked
 function clickEvent(clickedObject) {
     switch (clickedObject.parent) {
         case wardrobeGroup:
-            checkLR(clickedObject,lDoor,rDoor);
+            checkLR(clickedObject, lDoor, rDoor);
             break;
         case wardrobeGroup2:
-            checkLR(clickedObject,lDoor2,rDoor2);
+            checkLR(clickedObject, lDoor2, rDoor2);
             break;
         case wardrobeGroup3:
-            checkLR(clickedObject,lDoor3,rDoor3);
+            checkLR(clickedObject, lDoor3, rDoor3);
             break;
         case lDrawer:
             console.log('Hola LDrawer');
@@ -268,10 +281,11 @@ function clickEvent(clickedObject) {
     }
 }
 
+// Check witch mark has been clicked
 function isMark(clickedObject) {
     switch (clickedObject) {
         case tableMark:
-            moveToTable();      
+            moveToTable();
             break;
         case bedMark:
             moveToBed();
@@ -282,35 +296,38 @@ function isMark(clickedObject) {
     }
 }
 
-
+// Save Night and day so we don't needed to load every time ??? //Remove
+// Switch to Day
 function backGroundDay() {
     const backLoader = new THREE.CubeTextureLoader();
     const backGround = backLoader.load([
-        'textures/skyBoxDay/Daylight_Box_Right.bmp', // Derecha
-        'textures/skyBoxDay/Daylight_Box_Left.bmp', // Izquierda
-        'textures/skyBoxDay/Daylight_Box_Top.bmp', // Arriba
-        'textures/skyBoxDay/Daylight_Box_Bottom.bmp', // Abajo
-        'textures/skyBoxDay/Daylight_Box_Front.bmp', // Frente
-        'textures/skyBoxDay/Daylight_Box_Back.bmp'  // Atrás
+        'textures/skyBoxDay/Daylight_Box_Right.bmp', // Right
+        'textures/skyBoxDay/Daylight_Box_Left.bmp', // Left
+        'textures/skyBoxDay/Daylight_Box_Top.bmp', // Top
+        'textures/skyBoxDay/Daylight_Box_Bottom.bmp', // Bottom
+        'textures/skyBoxDay/Daylight_Box_Front.bmp', // Front
+        'textures/skyBoxDay/Daylight_Box_Back.bmp'  // Back
     ]);
     scene.background = backGround;
 }
 
+// Switch to night
 function backGroundNight() {
     const backLoader = new THREE.CubeTextureLoader();
     const backGround = backLoader.load([
-        'textures/skyBoxNight/nightsky_west.bmp', // Derecha
-        'textures/skyBoxNight/nightsky_east.bmp', // Izquierda
-        'textures/skyBoxNight/nightsky_up.bmp', // Arriba
-        'textures/skyBoxNight/nightsky_down.bmp', // Abajo
-        'textures/skyBoxNight/nightsky_south.bmp', // Frente
-        'textures/skyBoxNight/nightsky_north.bmp'  // Atrás
+        'textures/skyBoxNight/nightsky_west.bmp', // Right
+        'textures/skyBoxNight/nightsky_east.bmp', // Left
+        'textures/skyBoxNight/nightsky_up.bmp', // Top
+        'textures/skyBoxNight/nightsky_down.bmp', // Bottom
+        'textures/skyBoxNight/nightsky_south.bmp', // Front
+        'textures/skyBoxNight/nightsky_north.bmp'  // Back
     ]);
     scene.background = backGround;
 }
 
+// Turn on the light
 function lightOn() {
-    var spotLight = new THREE.PointLight(0xffffcc,  1); // yellow
+    var spotLight = new THREE.PointLight(0xffffcc, 1); // yellow
     spotLight.name = 'spotLight';
     spotLight.position.set(0, 6, 0);
     spotLight.distance = 20;
@@ -321,39 +338,41 @@ function lightOn() {
     scene.add(spotLight, slHelper2);
 }
 
+// Turn off the light
 function lightOff() {
     const spotLight = scene.getObjectByName('spotLight')
     scene.remove(spotLight);
 }
 
-
+// Move camera to table
 function moveToTable() {
     initialCamPos = camera.position.clone();
     console.log('TableMark');
     new TWEEN.Tween(camera.position)
-        .to({x:-2,y:2,z:0}, 2000)
-        .onComplete(()=>{
-            cameraControls.minDistance = 3; 
+        .to({ x: -2, y: 2, z: 0 }, 2000)
+        .onComplete(() => {
+            cameraControls.minDistance = 3;
             cameraControls.maxDistance = 6;
-            cameraControls.minAzimuthAngle = - 4 * Math.PI / 12 ;
-            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12 ; 
+            cameraControls.minAzimuthAngle = - 4 * Math.PI / 12;
+            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
             cameraControls.target.set(-2, 1, -4);
         })
         .easing(TWEEN.Easing.Quadratic.InOut)
         .start();
-    //Ca1mera.rotation
+    // Ca1mera.rotation
 }
 
+// Move camera to bed
 function moveToBed() {
     initialCamPos = camera.position.clone();
     new TWEEN.Tween(camera.position)
-        .to({x:-2,y:2,z:0}, 2000)
-        .onComplete(()=>{
-            cameraControls.minDistance = 3; 
+        .to({ x: -2, y: 2, z: 0 }, 2000)
+        .onComplete(() => {
+            cameraControls.minDistance = 3;
             cameraControls.maxDistance = 6;
-            cameraControls.minAzimuthAngle = - 4 * Math.PI / 12 ;
-            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12 ; 
+            cameraControls.minAzimuthAngle = - 4 * Math.PI / 12;
+            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
             cameraControls.target.set(-2, 1, -4);
         })
@@ -361,15 +380,16 @@ function moveToBed() {
         .start();
 }
 
+// Move camera to wardrobe
 function moveToWardrobe() {
     initialCamPos = camera.position.clone();
     new TWEEN.Tween(camera.position)
-        .to({x:-2,y:2,z:0}, 2000)
-        .onComplete(()=>{
-            cameraControls.minDistance = 3; 
+        .to({ x: -2, y: 2, z: 0 }, 2000)
+        .onComplete(() => {
+            cameraControls.minDistance = 3;
             cameraControls.maxDistance = 6;
-            cameraControls.minAzimuthAngle = - 4 * Math.PI / 12 ;
-            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12 ; 
+            cameraControls.minAzimuthAngle = - 4 * Math.PI / 12;
+            cameraControls.maxAzimuthAngle = 1 * Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
             cameraControls.target.set(-2, 1, -4);
         })
@@ -377,15 +397,16 @@ function moveToWardrobe() {
         .start();
 }
 
+// Move camera back
 function moveBack() {
     initialCamPos = camera.position.clone();
     new TWEEN.Tween(camera.position)
-        .to({x:0.5,y:2,z:7}, 2000)
-        .onComplete(()=>{
-            cameraControls.minDistance = 5; 
-            cameraControls.maxDistance = 10; 
-            cameraControls.minAzimuthAngle = - 7 * Math.PI / 12 ;
-            cameraControls.maxAzimuthAngle =  Math.PI / 12 ; 
+        .to({ x: 0.5, y: 2, z: 7 }, 2000)
+        .onComplete(() => {
+            cameraControls.minDistance = 5;
+            cameraControls.maxDistance = 10;
+            cameraControls.minAzimuthAngle = - 7 * Math.PI / 12;
+            cameraControls.maxAzimuthAngle = Math.PI / 12;
             cameraControls.maxPolarAngle = Math.PI / 2;
         })
         .easing(TWEEN.Easing.Quadratic.InOut)

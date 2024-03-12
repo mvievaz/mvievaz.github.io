@@ -1,5 +1,5 @@
 /**
-  utils.js 
+  geometry.js 
 
   This file contains geometry for the project.
 
@@ -13,7 +13,7 @@ import * as THREE from "../lib/three.module.js";
 export function createTable(scene, tableSize, legSize) {
     // Create the table top
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('textures/wood3.jpg  ');     // https://pin.it/3dDGjpqzo
+    const texture = textureLoader.load('textures/wood2.jpg  ');     // https://pin.it/3dDGjpqzo
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(3, 3);
@@ -24,7 +24,7 @@ export function createTable(scene, tableSize, legSize) {
     // Create table legs
 
     const textureLoaderLeg = new THREE.TextureLoader();
-    const textureLeg = textureLoaderLeg.load('textures/wood5.jpeg'); // https://pin.it/63mPV6T2T
+    const textureLeg = textureLoaderLeg.load('textures/wood4.jpeg'); // https://pin.it/63mPV6T2T
     const legMaterial = new THREE.MeshPhongMaterial({ map: textureLeg });
     const legGeometry = new THREE.BoxGeometry(0.1, 0.7, 0.1);
 
@@ -103,7 +103,7 @@ export function createTable(scene, tableSize, legSize) {
     // Add the table group to the scene
     scene.add(tableGroup);
 
-    // Return the table group if needed
+    // Return the table group, if needed
     return tableGroup;
 }
 
@@ -111,7 +111,7 @@ export function createTable(scene, tableSize, legSize) {
 export function createBed(scene) {
     // Create the bed base
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('textures/wood5.jpeg');     // https://pin.it/63mPV6T2T
+    const texture = textureLoader.load('textures/wood4.jpeg');     // https://pin.it/63mPV6T2T
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(3, 3);
@@ -164,10 +164,10 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     // Create the doors
     const doorGeometry = new THREE.BoxGeometry(wardrobeWidth / 2, wardrobeHeight, 0.05);
     const textureLoader1 = new THREE.TextureLoader();
-    const texture1 = textureLoader1.load('textures/wood5.jpeg');// https://pin.it/63mPV6T2T
+    const texture1 = textureLoader1.load('textures/wood4.jpeg');// https://pin.it/63mPV6T2T
     const doorMaterial1 = new THREE.MeshStandardMaterial({ map: texture1 });
     const textureLoader2 = new THREE.TextureLoader();
-    const texture2 = textureLoader2.load('textures/wood5.jpeg');// https://pin.it/63mPV6T2T
+    const texture2 = textureLoader2.load('textures/wood4.jpeg');// https://pin.it/63mPV6T2T
     const doorMaterial2 = new THREE.MeshStandardMaterial({ map: texture2 });
     const door1 = new THREE.Mesh(doorGeometry, doorMaterial1);
     const door2 = new THREE.Mesh(doorGeometry, doorMaterial2);
@@ -180,7 +180,7 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     const backGeometry = new THREE.BoxGeometry(wardrobeWidth, wardrobeHeight, 0.05);
 
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('textures/wood5.jpeg');// https://pin.it/63mPV6T2T
+    const texture = textureLoader.load('textures/wood4.jpeg');// https://pin.it/63mPV6T2T
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     const wallMaterial = new THREE.MeshPhongMaterial({ map: texture });
@@ -251,8 +251,8 @@ export function createWardrobe(scene, wardrobeWidth, wardrobeHeight, wardrobeDep
     scene.add(wardrobe2Group);
     wardrobe3Group.position.set(4 + 0.2 - wardrobeWidth / 2, wardrobeHeight / 2 + 0.1, wardrobeWidth * 2);
     scene.add(wardrobe3Group);
-    // Return the wardrobe group
-    return [wardrobeGroup,wardrobe2Group,wardrobe3Group]
+    // Return the wardrobe groups
+    return [wardrobeGroup, wardrobe2Group, wardrobe3Group]
 }
 
 
@@ -261,10 +261,10 @@ export function createRoom(scene) {
     // Ground
 
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('textures/wood2.jpg  '); // https://pin.it/6ejpZ3D3M
+    const texture = textureLoader.load('textures/wood.jpg  '); // https://pin.it/6ejpZ3D3M
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.alphaMap = THREE.Loader;    
+    texture.alphaMap = THREE.Loader;
     texture.repeat.set(3, 3);
     const groundMaterial = new THREE.MeshPhongMaterial({ map: texture });
     const groundGeometry = new THREE.BoxGeometry(8, 0.1, 8);
@@ -298,8 +298,8 @@ export function createWalls(scene) {
         new THREE.MeshPhongMaterial({ map: texture }),
         new THREE.MeshPhongMaterial({ map: texture }),
         new THREE.MeshPhongMaterial({ map: texture }),
-        new THREE.MeshPhongMaterial({ map: backTexture1,transparent: true, }),
-        new THREE.MeshPhongMaterial({ map: backTexture2,transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: backTexture1, transparent: true, }),
+        new THREE.MeshPhongMaterial({ map: backTexture2, transparent: true, }),
     ]
 
     // Back wall
@@ -313,13 +313,13 @@ export function createWalls(scene) {
     const rightWallMesh = new THREE.Mesh(rightWallGeometry, wallMaterial);
     rightWallMesh.position.set(4 - wallThickness / 2, wallHeight / 2 + 0.05, wallThickness / 2);
     scene.add(rightWallMesh);
-    return (backWallMesh, rightWallMesh)
+    return [backWallMesh, rightWallMesh]
 }
 
 // Function to create the frame on the right wall
 export function createFrame(scene) {
     const textureLoader1 = new THREE.TextureLoader();
-    const texture1 = textureLoader1.load('textures/wood4.jpeg');//https://pin.it/1WjkqDZq5
+    const texture1 = textureLoader1.load('textures/wood3.jpeg');//https://pin.it/1WjkqDZq5
     texture1.wrapS = THREE.RepeatWrapping;
     texture1.wrapT = THREE.RepeatWrapping;
     texture1.repeat.set(3, 3);
@@ -338,32 +338,32 @@ export function createFrame(scene) {
     pictureMesh.position.set(4 - 0.3 / 2 - 0.1, 2, -2); // Adjust position
     pictureMesh.rotation.y = Math.PI / 2; // Rotate 90 degrees to face into the room
     scene.add(pictureMesh);
-    return (frameMesh, pictureMesh)
+    return [frameMesh, pictureMesh]
 }
 
-
+// Function to create sphere "marks" as a buttons to see the furniture
 export function marks(scene) {
-    
+
     const bedMarkGeometry = new THREE.SphereGeometry(0.3, 32, 32);
     const bedMarkMaterial = new THREE.MeshPhongMaterial({ color: 'white', transparent: true, opacity: 0.5 });
     const bedMark = new THREE.Mesh(bedMarkGeometry, bedMarkMaterial);
-    bedMark.position.set(1.5,4,-2.5);
+    bedMark.position.set(1.5, 4, -2.5);
     bedMark.name = 'bedMark'
-    
+
     const tableMarkGeometry = new THREE.SphereGeometry(0.3, 32, 32);
     const tableMarkMaterial = new THREE.MeshPhongMaterial({ color: 'white', transparent: true, opacity: 0.5 });
     const tableMark = new THREE.Mesh(tableMarkGeometry, tableMarkMaterial);
-    tableMark.position.set(-2,4,-3.5);
+    tableMark.position.set(-2, 4, -3.5);
     tableMark.name = 'tableMark'
-    
+
     const wardrobeMarkGeometry = new THREE.SphereGeometry(0.3, 32, 32);
     const wardrobeMarkMaterial = new THREE.MeshPhongMaterial({ color: 'white', transparent: true, opacity: 0.5 });
     const wardrobeMark = new THREE.Mesh(wardrobeMarkGeometry, wardrobeMarkMaterial);
-    wardrobeMark.position.set(3.5,4,1.6);
+    wardrobeMark.position.set(3.5, 4, 1.6);
     wardrobeMark.name = 'wardrobeMark'
 
     const mark = new THREE.Group();
-    mark.add(bedMark,wardrobeMark,tableMark)
-    scene.add(mark) 
+    mark.add(bedMark, wardrobeMark, tableMark)
+    scene.add(mark)
     return mark
 }

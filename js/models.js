@@ -5,8 +5,10 @@
 
   @author mvievaz@inf.upv.es (c)
 */
+
 import { GLTFLoader } from "../lib/GLTFLoader.module.js";
 
+// Support function to duplicate hangers
 function duplicateHangers(hanger, widthN, n, scene, width, height) {
 
   for (let i = 0; i < n; i++) {
@@ -68,6 +70,7 @@ export function cowboyBoots(scene, width, height) {
     scene.add(gltf.scene);
   });
 }
+
 // Sneakers by Poly by Google [CC-BY] via Poly Pizza
 export function sneakers(scene, width, height) {
 
@@ -78,8 +81,8 @@ export function sneakers(scene, width, height) {
     scene.add(gltf.scene);
   });
 }
-// Flip flops by Poly by Google [CC-BY] via Poly Pizza
 
+// Flip flops by Poly by Google [CC-BY] via Poly Pizza
 export function flipFlops(scene, width, height) {
 
   var loader = new GLTFLoader();
@@ -89,6 +92,7 @@ export function flipFlops(scene, width, height) {
     scene.add(gltf.scene);
   });
 }
+
 // Pair of shoes by Poly by Google [CC-BY] via Poly Pizza
 export function pairOfShoes(scene, width, height) {
 
@@ -101,7 +105,6 @@ export function pairOfShoes(scene, width, height) {
 }
 
 // Dual Monitors on sit-stand arm by Pookage Hayes [CC-BY] via Poly Pizza
-
 export function dualMonitors(scene, width, height, depth) {
 
   var loader = new GLTFLoader();
@@ -114,7 +117,6 @@ export function dualMonitors(scene, width, height, depth) {
 }
 
 // PC by Poly by Google [CC-BY] via Poly Pizza
-
 export function pc(scene, width, height, depth) {
 
   var loader = new GLTFLoader();
@@ -138,7 +140,6 @@ export function mug(scene, width, height, depth) {
 }
 
 // Pencil by Poly by Google [CC-BY] via Poly Pizza
-
 export function pencil(scene, width, height, depth) {
 
   var loader = new GLTFLoader();
@@ -151,7 +152,6 @@ export function pencil(scene, width, height, depth) {
 }
 
 // Pillow by Poly by Google [CC-BY] via Poly Pizza
-
 export function pillow(scene, width, height, depth) {
 
   var loader = new GLTFLoader();
